@@ -52,14 +52,17 @@ export class PodcastsService {
     try {
       const podcast = await this.podcasts.findOne(
         { id },
-        // { relations: ['episodes'] },
         {
           join: {
-            alias: 'episode',
-            leftJoin: { episodes: 'podcast.episodes' },
+            alias: 'podcast',
+            innerJoinAndSelect: { episode: 'podcast.episodes' },
           },
+          // loadRelationIds: true,
+          // relations: ['episodes'],
         },
       );
+
+      console.log('podcast', podcast);
 
       if (!podcast) {
         return {
@@ -158,36 +161,47 @@ export class PodcastsService {
     }
   }
 
-  // deleteEpisode({ podcastId, episodeId }: EpisodesSearchInput): CoreOutput {
-  //   const { podcast, error, ok } = this.getPodcast(podcastId);
-  //   if (!ok) {
-  //     return { ok, error };
-  //   }
-  //   this.updatePodcast({
-  //     id: podcastId,
-  //     episodes: podcast.episodes.filter((episode) => episode.id !== episodeId),
-  //   });
+  async deleteEpisode({
+    podcastId,
+    episodeId,
+  }: EpisodesSearchInput): Promise<CoreOutput> {
+    const { error, ok } = await this.getPodcast(podcastId);
 
-  //   return { ok: true };
-  // }
+    if (!ok) {
+      return { ok, error };
+    }
 
-  // updateEpisode({
-  //   podcastId,
-  //   episodeId,
-  //   ...rest
-  // }: UpdateEpisodeDto): CoreOutput {
-  //   const { podcast, error, ok } = this.getPodcast(podcastId);
-  //   if (!ok) {
-  //     return { ok, error };
-  //   }
-  //   const episodeIdx = podcast.episodes.findIndex(({ id }) => id === episodeId);
-  //   const newEpisode = { ...podcast.episodes[episodeIdx], ...rest };
-  //   this.deleteEpisode({ podcastId, episodeId });
-  //   const { podcast: changedPodcast } = this.getPodcast(podcastId);
-  //   this.updatePodcast({
-  //     id: podcastId,
-  //     episodes: [...changedPodcast.episodes, newEpisode],
-  //   });
-  //   return { ok: true };
-  // }
+    try {
+      await this.episodes.delete(episodeId);
+
+      return { ok: true };
+    } catch {
+      return { ok: true, error: "Couldn't delete episode" };
+    }
+  }
+
+  async updateEpisode({
+    podcastId,
+    episodeId,
+    ...rest
+  }: UpdateEpisodeDto): Promise<CoreOutput> {
+    const { error, ok, podcast } = await this.getPodcast(podcastId);
+
+    if (!ok) {
+      return { ok, error };
+    }
+
+    try {
+      this.episodes.update({ id: episodeId, podcast }, { ...rest });
+
+      return { ok: true };
+    } catch (e) {
+      console.log(e);
+
+      return {
+        ok: false,
+        error: "Couldn't update episode.",
+      };
+    }
+  }
 }

@@ -68,15 +68,17 @@ export class EpisodeResolver {
     return this.podcastService.createEpisode(createEpisodeDto);
   }
 
-  // @Mutation(() => CoreOutput)
-  // updateEpisode(@Args('input') updateEpisodeDto: UpdateEpisodeDto) {
-  //   return this.podcastService.updateEpisode(updateEpisodeDto);
-  // }
+  @Mutation(() => CoreOutput)
+  updateEpisode(
+    @Args('input') updateEpisodeDto: UpdateEpisodeDto,
+  ): Promise<CoreOutput> {
+    return this.podcastService.updateEpisode(updateEpisodeDto);
+  }
 
-  // @Mutation(() => CoreOutput)
-  // deleteEpisode(
-  //   @Args('input') episodesSearchInput: EpisodesSearchInput,
-  // ): CoreOutput {
-  //   return this.podcastService.deleteEpisode(episodesSearchInput);
-  // }
+  @Mutation(() => CoreOutput)
+  deleteEpisode(
+    @Args('input') episodesSearchInput: EpisodesSearchInput,
+  ): Promise<CoreOutput> {
+    return this.podcastService.deleteEpisode(episodesSearchInput);
+  }
 }
