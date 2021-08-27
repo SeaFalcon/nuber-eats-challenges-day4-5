@@ -17,11 +17,12 @@ export class Episode extends CoreEntity {
   @Column()
   category: string;
 
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @IsNumber()
-  @Column()
+  @Column({ default: 0 })
   rating: number;
 
+  @Field(() => Podcast)
   @ManyToOne(() => Podcast, (podcast) => podcast.episodes, {
     onDelete: 'CASCADE',
   })

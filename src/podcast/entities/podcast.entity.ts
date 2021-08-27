@@ -1,7 +1,7 @@
 import { Episode } from './episode.entity';
 import { ObjectType, Field, InputType } from '@nestjs/graphql';
 import { IsString, IsNumber } from 'class-validator';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, OneToMany } from 'typeorm';
 import { CoreEntity } from './common.entity';
 
 @InputType('PodcastInputType', { isAbstract: true })

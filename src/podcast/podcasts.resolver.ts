@@ -50,31 +50,33 @@ export class PodcastsResolver {
   }
 }
 
-// @Resolver(() => Episode)
-// export class EpisodeResolver {
-//   constructor(private readonly podcastService: PodcastsService) {}
+@Resolver(() => Episode)
+export class EpisodeResolver {
+  constructor(private readonly podcastService: PodcastsService) {}
 
-//   @Query(() => EpisodesOutput)
-//   getEpisodes(
-//     @Args('input') podcastSearchInput: PodcastSearchInput,
-//   ): EpisodesOutput {
-//     return this.podcastService.getEpisodes(podcastSearchInput.id);
-//   }
+  @Query(() => EpisodesOutput)
+  getEpisodes(
+    @Args('input') podcastSearchInput: PodcastSearchInput,
+  ): Promise<EpisodesOutput> {
+    return this.podcastService.getEpisodes(podcastSearchInput.id);
+  }
 
-//   @Mutation(() => CoreOutput)
-//   createEpisode(@Args('input') createEpisodeDto: CreateEpisodeDto): CoreOutput {
-//     return this.podcastService.createEpisode(createEpisodeDto);
-//   }
+  @Mutation(() => CoreOutput)
+  createEpisode(
+    @Args('input') createEpisodeDto: CreateEpisodeDto,
+  ): Promise<CoreOutput> {
+    return this.podcastService.createEpisode(createEpisodeDto);
+  }
 
-//   @Mutation(() => CoreOutput)
-//   updateEpisode(@Args('input') updateEpisodeDto: UpdateEpisodeDto) {
-//     return this.podcastService.updateEpisode(updateEpisodeDto);
-//   }
+  // @Mutation(() => CoreOutput)
+  // updateEpisode(@Args('input') updateEpisodeDto: UpdateEpisodeDto) {
+  //   return this.podcastService.updateEpisode(updateEpisodeDto);
+  // }
 
-//   @Mutation(() => CoreOutput)
-//   deleteEpisode(
-//     @Args('input') episodesSearchInput: EpisodesSearchInput,
-//   ): CoreOutput {
-//     return this.podcastService.deleteEpisode(episodesSearchInput);
-//   }
-// }
+  // @Mutation(() => CoreOutput)
+  // deleteEpisode(
+  //   @Args('input') episodesSearchInput: EpisodesSearchInput,
+  // ): CoreOutput {
+  //   return this.podcastService.deleteEpisode(episodesSearchInput);
+  // }
+}
