@@ -51,38 +51,57 @@ export class PodcastsService {
     }
   }
 
-  // getPodcast(id: number): PodcastOutput {
-  //   const podcast = this.podcasts.find((podcast) => podcast.id === id);
-  //   if (!podcast) {
-  //     return {
-  //       ok: false,
-  //       error: `${id} id podcast doesn't exist!`,
-  //     };
-  //   }
-  //   return {
-  //     ok: true,
-  //     podcast,
-  //   };
-  // }
+  async getPodcast(id: number): Promise<PodcastOutput> {
+    const podcast = await this.podcasts.findOne({ id });
+    if (!podcast) {
+      return {
+        ok: false,
+        error: `Id ${id} podcast doesn't exist!`,
+      };
+    }
+    return {
+      ok: true,
+      podcast,
+    };
+  }
 
-  // deletePodcast(id: number): CoreOutput {
-  //   const { ok, error } = this.getPodcast(id);
-  //   if (!ok) {
-  //     return { ok, error };
-  //   }
-  //   this.podcasts = this.podcasts.filter((p) => p.id !== id);
-  //   return { ok };
-  // }
+  async deletePodcast(id: number): Promise<CoreOutput> {
+    try {
+      const { ok, error, podcast } = await this.getPodcast(id);
 
-  // updatePodcast({ id, ...rest }: UpdatePodcastDto): CoreOutput {
-  //   const { ok, error, podcast } = this.getPodcast(id);
-  //   if (!ok) {
-  //     return { ok, error };
-  //   }
-  //   this.podcasts = this.podcasts.filter((p) => p.id !== id);
-  //   this.podcasts.push({ ...podcast, ...rest });
-  //   return { ok };
-  // }
+      if (!ok) {
+        return { ok, error };
+      }
+
+      await this.podcasts.delete({ id: podcast.id });
+
+      return { ok };
+    } catch {
+      return {
+        ok: false,
+        error: "Couldn't delete Podcast.",
+      };
+    }
+  }
+
+  async updatePodcast({ id, ...rest }: UpdatePodcastDto): Promise<CoreOutput> {
+    try {
+      const { ok, error, podcast } = await this.getPodcast(id);
+
+      if (!ok) {
+        return { ok, error };
+      }
+
+      this.podcasts.update({ id: podcast.id }, { ...rest });
+
+      return { ok };
+    } catch {
+      return {
+        ok: false,
+        error: "Couldn't update Podcast.",
+      };
+    }
+  }
 
   // getEpisodes(podcastId: number): EpisodesOutput {
   //   const { podcast, ok, error } = this.getPodcast(podcastId);

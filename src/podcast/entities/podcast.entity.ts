@@ -20,7 +20,7 @@ export class Podcast extends CoreEntity {
   @IsNumber()
   @Column({ default: 0 })
   rating: number;
-  @Field(() => [Episode])
+  @Field(() => [Episode], { nullable: true })
   @OneToMany(() => Episode, (episode) => episode.podcast)
   episodes: Episode[];
 }

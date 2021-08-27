@@ -30,20 +30,24 @@ export class PodcastsResolver {
     return this.podcastsService.createPodcast(createPodcastDto);
   }
 
-  // @Query(() => PodcastOutput)
-  // getPodcast(@Args('input') podcastSearchInput: PodcastSearchInput) {
-  //   return this.podcastsService.getPodcast(podcastSearchInput.id);
-  // }
+  @Query(() => PodcastOutput)
+  getPodcast(
+    @Args('input') podcastSearchInput: PodcastSearchInput,
+  ): Promise<PodcastOutput> {
+    return this.podcastsService.getPodcast(podcastSearchInput.id);
+  }
 
-  // @Mutation(() => CoreOutput)
-  // deletePodcast(@Args('input') podcastSearchInput: PodcastSearchInput) {
-  //   return this.podcastsService.deletePodcast(podcastSearchInput.id);
-  // }
+  @Mutation(() => CoreOutput)
+  deletePodcast(@Args('input') podcastSearchInput: PodcastSearchInput) {
+    return this.podcastsService.deletePodcast(podcastSearchInput.id);
+  }
 
-  // @Mutation(() => CoreOutput)
-  // updatePodcast(@Args('input') updatePodcastDto: UpdatePodcastDto): CoreOutput {
-  //   return this.podcastsService.updatePodcast(updatePodcastDto);
-  // }
+  @Mutation(() => CoreOutput)
+  updatePodcast(
+    @Args('input') updatePodcastDto: UpdatePodcastDto,
+  ): Promise<CoreOutput> {
+    return this.podcastsService.updatePodcast(updatePodcastDto);
+  }
 }
 
 // @Resolver(() => Episode)
